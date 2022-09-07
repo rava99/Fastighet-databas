@@ -82,9 +82,9 @@ VALUES ('Tegel 6', 'Panelgatan 5', '1001', '2022-03-01', 'false'),
        ('Egino 14', 'Lundavägen 10', '0002', '2022-05-01', 'false');
 
 INSERT INTO errorReports(error_ID, personnumber, tenant_name, property_address, apartment_number, information)
-VALUES ('12345', '9906075512', 'Stina Hansson', 'Panelgatan 19','1005', 'Vattenläcka'),
-       ('11111', '9512053020', 'Carl Svensson', 'Panelgatan 5','1001', 'List gått sönder'),
-       ('22222', '9706011133', 'Emilia Carlsson', 'Lundavägen 10','0002', 'Ingen värme');
+VALUES ('12345', '9906075512', 'Stina Hansson', 'Panelgatan 19','1005', 'Kass ventil'),
+       ('11111', '9512053020', 'Carl Svensson', 'Panelgatan 5','1001', 'List av'),
+       ('22222', '9706011133', 'Emilia Carlsson', 'Lundavägen 10','0002', 'Kallt element');
 
 
 

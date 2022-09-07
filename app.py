@@ -63,6 +63,29 @@ def get_tenants():
     response.status = 200
     return {"data": found}
 
+# få ut alla felanmälningar en person gjort
+# curl -X GET http://localhost:8888/tenant/9906075512/errorReports
+@get('/tenant/<personnumber>/errorReports') 
+def get_errorReport_for_tenant(personnumber):
+    c = db.cursor()
+    c.execute(
+        """
+        SELECT tenant_name, personnumber, information
+        FROM errorReports
+        WHERE personnumber = ?
+        """,
+        [unquote(personnumber)]
+    )
+    items = c.fetchall()
+    if not items:
+        response.status = 404
+        return {"data": []}
+    else:
+        found = [{"tenants name": tenant_name, "personnumber": personnumber, "information": information}
+                 for tenant_name, personnumber, information in items]
+        response.status = 200
+        return {"data": found}
+
 
 # @post('/ingredients')
 # def add_ingredients():
@@ -161,6 +184,7 @@ def get_tenants():
 
 # @get('/cookies/<cookie_name>/recipe') => @get('/tentant/<personnumbere>/errorReports') få ut alla felanmälningar en person gjort
 # @get('/janitor/<janitor_personnumber>/properties') få ut vilka fastigheter en janitor ansvarar över, skriv in i readme fil hur man gör
+# 
 # def get_recipe_for_cookie(cookie_name):
 #     c = db.cursor()
 #     c.execute(
