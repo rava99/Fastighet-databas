@@ -87,6 +87,22 @@ def get_errorReport_for_tenant(personnumber):
         response.status = 200
         return {"data": found}
 
+# get all the the apartments from the database
+# curl -X GET http://localhost:8888/apartments
+@get('/apartments')
+def get_apartments():
+    c = db.cursor()
+    c.execute(
+        """
+		SELECT property_name, property_address, apartment_number, end_of_contract_date, is_terminated
+		FROM apartments
+		""",
+    )
+    found = [{"property_name": property_name, "property_address": property_address, "apartment_number": apartment_number, "end_of_contract_date": end_of_contract_date, "is_terminated": is_terminated}
+             for property_name, property_address, apartment_number, end_of_contract_date, is_terminated in c]
+    response.status = 200
+    return {"data": found}
+
 # get all the upcoming vacant apartments between given dates in a property    
 # curl -X GET http://localhost:8888/apartments/Egino14/vacant\?after=2021-02-21\&before=2022-12-05
 @get('/apartments/<property_name>/vacant')
@@ -114,32 +130,67 @@ def get_vacancy(property_name):
     response.status = 200
     return {"data": found}
 
-# terminate contract of an apartment and give date for end of contract
-# @post('/apartments/<property_address>/<apartment_number>/terminate')
-# def terminate_contract(property_address, apartment_number):
+# # terminate contract of an apartment and give date for end of contract
+# curl -X POST http://localhost:8888/apartments/Panelgatan5/1001/terminate
+@post('/apartments/<property_address>/<apartment_number>/terminate')
+def terminate_contract(property_address, apartment_number):
+    c = db.cursor()
+    c.execute( """
+        UPDATE apartments
+        SET is_terminated = 1,
+            end_of_contract_date = "2023-03-01"
+        WHERE property_address = ?
+        AND apartment_number = ?
+        """,
+        [unquote(property_address), unquote(apartment_number)]
+    )
+
+    db.commit()
+    response.status = 205
+    return {"data": ""}
+
+   
+# @post('/cookies')
+# def add_cookies():
+#     cookie = request.json
 #     c = db.cursor()
-#     query = """
-#         UPDATE apartments
-#         SET is_blocked = 1
-#         WHERE 1 = 1
+#     c.execute(
 #         """
-#     params = []
-#     query += " AND cookie_name = ?"
-#     params.append(unquote(cookie_name))
-#     if request.query.before:
-#         query += " AND production_date < ?"
-#         params.append(unquote(request.query.before))
-#     if request.query.after:
-#         query += " AND production_date > ?"
-#         params.append(unquote(request.query.after))
-#     c = db.cursor()
-#     c.execute(query, params)
-
+#         INSERT
+#         INTO cookies(cookie_name)
+#         VALUES(?)
+#         """,
+#         [cookie['name']]
+#     )
+#     for item in cookie['recipe']:
+#         c.execute(
+#             """
+#             INSERT
+#             INTO recipeitems(cookie_name, ingredient_name, quantity)
+#             VALUES(?,?,?)
+#             """,
+#             [cookie['name'], item['ingredient'], item['amount']]
+#         )
 #     db.commit()
-#     response.status = 205
-#     return {"data": ""}
+#     response.status = 201
+#     return {"location ": "/cookies/" + quote(cookie['name'])}
 
-# curl -X POST http://localhost:8888/cookies/Hallongrotta/block\?after=2021-02-21\&before=2022-03-11
+    
+# @post('/ingredients')
+# def add_ingredients():
+#     ingredient = request.json
+#     c = db.cursor()
+#     c.execute(
+#         """
+#         INSERT
+#         INTO ingredients(ingredient_name, measure)
+#         VALUES(?, ?)
+#         """,
+#         [ingredient['ingredient'], ingredient['unit']]
+#     )
+#     db.commit()
+#     response.status = 201
+#     return {"location": "/ingredients/" + quote(ingredient['ingredient'])}
 
 # @post('/cookies/<cookie_name>/block') typ isAvailable på om en lägenhet är ledig. Sen man kan ange datum osv.
 # def uppdate_block(cookie_name):
