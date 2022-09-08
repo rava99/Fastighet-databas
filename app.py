@@ -48,7 +48,8 @@ def tenants():
         return {"location": "/tenants/" + quote(tenants['tenant_name'])}
         # curl -X POST http://localhost:8888/tenants -d '{"tenant_name": "Hasse Backman", "personnumber": " 7708094473", "property_address": "Lundavägen 10", "property_name": "Egino 14", "apartment_number": "0001"}' -H "Content-Type: application/json"
 
-
+# get all the the tenants from the database
+# curl -X GET http://localhost:8888/tenants
 @get('/tenants')
 def get_tenants():
     c = db.cursor()
@@ -63,9 +64,9 @@ def get_tenants():
     response.status = 200
     return {"data": found}
 
-# få ut alla felanmälningar en person gjort
-# curl -X GET http://localhost:8888/tenant/9906075512/errorReports
-@get('/tenant/<personnumber>/errorReports') 
+# get all the errorreports made by a certain person
+# curl -X GET http://localhost:8888/tenants/9906075512/errorReports
+@get('/tenants/<personnumber>/errorReports') 
 def get_errorReport_for_tenant(personnumber):
     c = db.cursor()
     c.execute(
@@ -86,6 +87,59 @@ def get_errorReport_for_tenant(personnumber):
         response.status = 200
         return {"data": found}
 
+# get all the upcoming vacant apartments between given dates in a property    
+# curl -X GET http://localhost:8888/apartments/Egino14/vacant\?after=2021-02-21\&before=2022-12-05
+@get('/apartments/<property_name>/vacant')
+def get_vacancy(property_name):
+    c = db.cursor()
+    query = """
+		SELECT end_of_contract_date, apartment_number
+		FROM apartments
+		WHERE is_terminated = "Yes"
+		"""
+    params = []
+    query += " AND property_name = ?"
+    params.append(unquote(property_name))
+    if request.query.before:
+        query += " AND end_of_contract_date < ?"
+        params.append(unquote(request.query.before))
+    if request.query.after:
+        query += " AND end_of_contract_date > ?"
+        params.append(unquote(request.query.after))
+
+    c.execute(query, params)
+    db.commit()
+    found = [{"end_of_contract_date": end_of_contract_date, "apartment_number": apartment_number}
+             for end_of_contract_date, apartment_number in c]
+    response.status = 200
+    return {"data": found}
+
+
+# @post('/cookies/<cookie_name>/block') typ isAvailable på om en lägenhet är ledig. Sen man kan ange datum osv.
+# def uppdate_block(cookie_name):
+#     c = db.cursor()
+#     query = """
+#         UPDATE pallets
+#         SET is_blocked = 1
+#         WHERE 1 = 1
+#         """
+#     params = []
+#     query += " AND cookie_name = ?"
+#     params.append(unquote(cookie_name))
+#     if request.query.before:
+#         query += " AND production_date < ?"
+#         params.append(unquote(request.query.before))
+#     if request.query.after:
+#         query += " AND production_date > ?"
+#         params.append(unquote(request.query.after))
+#     c = db.cursor()
+#     c.execute(query, params)
+
+#     db.commit()
+#     response.status = 205
+#     return {"data": ""}
+
+# curl -X POST http://localhost:8888/cookies/Hallongrotta/block\?after=2021-02-21\&before=2022-03-11
 
 # @post('/ingredients')
 # def add_ingredients():
@@ -229,59 +283,6 @@ def get_errorReport_for_tenant(personnumber):
 # #         pallet_id, = found
 # #         return {"location": "/pallets/{pallet_id}"}
 # #         # curl -X POST http://localhost:8888/pallets -d '{"cookie": "Tango"}' -H
-
-
-# @get('/pallets')
-# def get_pallets():
-#     query = """
-# 		SELECT production_date, cookie_name, pallet_id, is_blocked
-# 		FROM pallets
-# 		WHERE 1 = 1
-# 		"""
-#     params = []
-#     if request.query.cookie:
-#         query += " AND cookie_name = ?"
-#         params.append(unquote(request.query.cookie))
-#     if request.query.before:
-#         query += " AND production_date < ?"
-#         params.append(unquote(request.query.before))
-#     if request.query.after:
-#         query += " AND production_date > ?"
-#         params.append(unquote(request.query.after))
-
-#     c = db.cursor()
-#     c.execute(query, params)
-#     found = [{"production_date": production_date, "cookie_name": cookie_name, "pallet_id": pallet_id, "is_blocked": is_blocked}
-#              for production_date, cookie_name, pallet_id, is_blocked in c]
-#     response.status = 200
-#     return {"data": found}
-
-
-# @post('/cookies/<cookie_name>/block') typ isAvailable på om en lägenhet är ledig. Sen man kan ange datum osv.
-# def uppdate_block(cookie_name):
-#     c = db.cursor()
-#     query = """
-#         UPDATE pallets
-#         SET is_blocked = 1
-#         WHERE 1 = 1
-#         """
-#     params = []
-#     query += " AND cookie_name = ?"
-#     params.append(unquote(cookie_name))
-#     if request.query.before:
-#         query += " AND production_date < ?"
-#         params.append(unquote(request.query.before))
-#     if request.query.after:
-#         query += " AND production_date > ?"
-#         params.append(unquote(request.query.after))
-#     c = db.cursor()
-#     c.execute(query, params)
-
-#     db.commit()
-#     response.status = 205
-#     return {"data": ""}
-
-# # curl -X POST http://localhost:8888/cookies/Hallongrotta/block\?after=2021-02-21\&before=2022-03-11
 
 
 # @post('/cookies/<cookie_name>/unblock')
