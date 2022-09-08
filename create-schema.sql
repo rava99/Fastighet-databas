@@ -67,28 +67,25 @@ VALUES ('Bertil Carlsson', '6507054419'),
        ('Kalle Henriksson', '7012083994');
 
 INSERT INTO properties(property_name, property_address, janitor_personnumber)
-VALUES ('Tegel 6', 'Panelgatan 5', '6507054419'),
-       ('Tegel 8', 'Panelgatan 19', '6507054419'),
-       ('Egino14', 'Lundavägen 10', '7012083994');
+VALUES ('Tegel6', 'Panelgatan5', '6507054419'),
+       ('Tegel8', 'Panelgatan19', '6507054419'),
+       ('Egino14', 'Lundavägen10', '7012083994');
 
 INSERT INTO tenants(tenant_name, personnumber, property_address, property_name, apartment_number )
-VALUES ('Stina Hansson', '9906075512', 'Panelgatan 19', 'Tegel 8', '1005'),
-       ('Carl Svensson', '9512053020','Panelgatan 5', 'Tegel 6', '1001'),
-       ('Emilia Carlsson', '9706011133', 'Lundavägen 10', 'Egino14', '0002');
-
-
---utflytt bestämt datum. Ta bort rented from?
+VALUES ('Stina Hansson', '9906075512', 'Panelgatan19', 'Tegel8', '1005'),
+       ('Carl Svensson', '9512053020','Panelgatan5', 'Tegel6', '1001'),
+       ('Emilia Carlsson', '9706011133', 'Lundavägen10', 'Egino14', '0002');
 
 INSERT INTO apartments(property_name, property_address, apartment_number,end_of_contract_date, is_terminated)
-VALUES ('Tegel 6', 'Panelgatan 5', '1001', NULL, false),
-       ('Tegel 8', 'Panelgatan 19', '1005', '2024-01-01', true),
-       ('Egino14', 'Lundavägen 10', '0002', NULL, false),
-       ('Egino14', 'Lundavägen 10', '0003', '2022-10-01', true);
+VALUES ('Tegel6', 'Panelgatan5', '1001', NULL, false),
+       ('Tegel8', 'Panelgatan19', '1005', '2024-01-01', true),
+       ('Egino14', 'Lundavägen10', '0002', NULL, false),
+       ('Egino14', 'Lundavägen10', '0003', '2022-10-01', true);
 
 INSERT INTO errorReports(error_ID, personnumber, tenant_name, property_address, apartment_number, information)
-VALUES ('12345', '9906075512', 'Stina Hansson', 'Panelgatan 19','1005', 'Kass ventil'),
-       ('11111', '9512053020', 'Carl Svensson', 'Panelgatan 5','1001', 'List av'),
-       ('22222', '9706011133', 'Emilia Carlsson', 'Lundavägen 10','0002', 'Kallt element');
+VALUES ('12345', '9906075512', 'Stina Hansson', 'Panelgatan19','1005', 'Kass ventil'),
+       ('11111', '9512053020', 'Carl Svensson', 'Panelgatan5','1001', 'List av'),
+       ('22222', '9706011133', 'Emilia Carlsson', 'Lundavägen10','0002', 'Kallt element');
 
 
 
