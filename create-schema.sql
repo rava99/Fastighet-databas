@@ -8,8 +8,6 @@ DROP TABLE IF EXISTS errorReports;
 
 PRAGMA foreign_keys=ON;
 
-
-
 CREATE TABLE tenants (
     tenant_name TEXT,
     personnumber INT,
@@ -37,7 +35,7 @@ CREATE TABLE apartments (
     property_name TEXT,
     property_address TEXT,
     apartment_number INT,
-    is_terminated true,
+    is_terminated DEFAULT true,
     end_of_contract_date DATE,
     PRIMARY KEY (property_address, apartment_number),
     FOREIGN KEY (property_name) REFERENCES properties(property_name)
@@ -53,8 +51,6 @@ CREATE TABLE errorReports (
     FOREIGN KEY (personnumber) REFERENCES tenants(personnumber),
     FOREIGN KEY (property_address, apartment_number) REFERENCES apartments(property_address, apartment_number)
 );
-
-
 
 
 
@@ -83,10 +79,3 @@ INSERT INTO errorReports(error_ID, personnumber, tenant_name, property_address, 
 VALUES ('12345', '9906075512', 'Stina Hansson', 'Panelgatan19','1005', 'Kass ventil'),
        ('11111', '9512053020', 'Carl Svensson', 'Panelgatan5','1001', 'List av'),
        ('22222', '9706011133', 'Emilia Carlsson', 'Lundavägen10','0002', 'Kallt element');
-
-
-
-
-
-
-
