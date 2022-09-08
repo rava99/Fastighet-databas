@@ -6,12 +6,9 @@ DROP TABLE IF EXISTS properties;
 DROP TABLE IF EXISTS apartments;
 DROP TABLE IF EXISTS errorReports;
 
--- DROP TRIGGER IF EXISTS add_new_pallet;
-
 PRAGMA foreign_keys=ON;
 
 
--- SKRIV IN ALLA FOREIGN KEYS!!!
 
 CREATE TABLE tenants (
     tenant_name TEXT,
@@ -93,91 +90,3 @@ VALUES ('12345', '9906075512', 'Stina Hansson', 'Panelgatan19','1005', 'Kass ven
 
 
 
-
-
-
--- CREATE TABLE ingredients (
---     ingredient_name TEXT,
---     in_stock INT DEFAULT 0,
---     measure TEXT,
---     delivery_date DATE,
---     delivery_quantity INT,
---     PRIMARY KEY (ingredient_name)
--- );
-
--- CREATE TABLE recipeitems (
---     cookie_name TEXT,
---     quantity INT,
---     ingredient_name TEXT,
---     PRIMARY KEY (cookie_name, ingredient_name),
---     FOREIGN KEY (cookie_name) REFERENCES cookies(cookie_name),
---     FOREIGN KEY (ingredient_name) REFERENCES ingredients(ingredient_name)
--- );
-
--- CREATE TABLE cookies (
---     cookie_name TEXT,
---     PRIMARY KEY (cookie_name)
--- );
-
-
--- CREATE TABLE pallets (
---     pallet_id TEXT DEFAULT (lower(hex(randomblob(16)))),
---     production_date DATE,
---     is_blocked DEFAULT false,
---     cookie_name TEXT,
---     PRIMARY KEY (pallet_id),
---     FOREIGN KEY (cookie_name) REFERENCES cookies(cookie_name)
--- );
-
-
--- CREATE TABLE orders (
---     order_id TEXT DEFAULT (lower(hex(randomblob(16)))),
---     order_date DATE,
---     delivery_date DATE,
---     customer_name TEXT,
---     PRIMARY KEY (order_id),
---     FOREIGN KEY (customer_name) REFERENCES customers(customer_name)
--- );
-
--- CREATE TABLE orderspecs (
---     order_id TEXT,
---     quantity INT,
---     cookie_name TEXT,
---     PRIMARY KEY (order_id, cookie_name),
---     FOREIGN KEY (order_id) REFERENCES orders(order_id),
---     FOREIGN KEY (cookie_name) REFERENCES cookies(cookie_name)
--- );
-
-
-
-
--- INSERT INTO pallets(production_date, cookie_name)
--- VALUES ('2022-03-10', 'Hallongrotta'),
---        ('2024-03-10', 'Hallongrotta'),
---        ('2022-03-01', 'Almond delight'),
---        ('2020-04-01', 'Hallongrotta'),
---        ('2021-06-17', 'Kollabollar');
-
--- CREATE TRIGGER add_new_pallet
--- BEFORE INSERT ON pallets
--- BEGIN
---     WITH 
---         new_pallet_ingredients(ingredient_name, quantity) AS (
---             SELECT ingredient_name, quantity
---             FROM recipeitems
---             WHERE cookie_name = NEW.cookie_name),
---         new_pallet_quantities(in_stock, quantity) AS (
---             SELECT in_stock, quantity
---             FROM ingredients
---             JOIN new_pallet_ingredients
---             USING (ingredient_name))
---     SELECT
---         CASE WHEN
---         (SELECT count()
---          FROM new_pallet_quantities
---          WHERE in_stock >= quantity * 54) < (SELECT count()
---                                              FROM new_pallet_quantities)
---         THEN
---             RAISE (ROLLBACK, "Insufficient ingredients in stock")
---         END;
--- END;
