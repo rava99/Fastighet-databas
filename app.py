@@ -95,7 +95,7 @@ def get_vacancy(property_name):
     query = """
 		SELECT end_of_contract_date, apartment_number
 		FROM apartments
-		WHERE is_terminated = "Yes"
+		WHERE is_terminated = 1
 		"""
     params = []
     query += " AND property_name = ?"
@@ -114,6 +114,32 @@ def get_vacancy(property_name):
     response.status = 200
     return {"data": found}
 
+# terminate contract of an apartment and give date for end of contract
+# @post('/apartments/<property_address>/<apartment_number>/terminate')
+# def terminate_contract(property_address, apartment_number):
+#     c = db.cursor()
+#     query = """
+#         UPDATE apartments
+#         SET is_blocked = 1
+#         WHERE 1 = 1
+#         """
+#     params = []
+#     query += " AND cookie_name = ?"
+#     params.append(unquote(cookie_name))
+#     if request.query.before:
+#         query += " AND production_date < ?"
+#         params.append(unquote(request.query.before))
+#     if request.query.after:
+#         query += " AND production_date > ?"
+#         params.append(unquote(request.query.after))
+#     c = db.cursor()
+#     c.execute(query, params)
+
+#     db.commit()
+#     response.status = 205
+#     return {"data": ""}
+
+# curl -X POST http://localhost:8888/cookies/Hallongrotta/block\?after=2021-02-21\&before=2022-03-11
 
 # @post('/cookies/<cookie_name>/block') typ isAvailable på om en lägenhet är ledig. Sen man kan ange datum osv.
 # def uppdate_block(cookie_name):

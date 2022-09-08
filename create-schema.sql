@@ -40,7 +40,7 @@ CREATE TABLE apartments (
     property_name TEXT,
     property_address TEXT,
     apartment_number INT,
-    is_terminated TEXT,
+    is_terminated true,
     end_of_contract_date DATE,
     PRIMARY KEY (property_address, apartment_number),
     FOREIGN KEY (property_name) REFERENCES properties(property_name)
@@ -80,10 +80,10 @@ VALUES ('Stina Hansson', '9906075512', 'Panelgatan 19', 'Tegel 8', '1005'),
 --utflytt bestämt datum. Ta bort rented from?
 
 INSERT INTO apartments(property_name, property_address, apartment_number,end_of_contract_date, is_terminated)
-VALUES ('Tegel 6', 'Panelgatan 5', '1001', NULL, 'No'),
-       ('Tegel 8', 'Panelgatan 19', '1005', '2024-01-01', "Yes"),
-       ('Egino14', 'Lundavägen 10', '0002', NULL, 'No'),
-       ('Egino14', 'Lundavägen 10', '0003', '2022-10-01', "Yes");
+VALUES ('Tegel 6', 'Panelgatan 5', '1001', NULL, false),
+       ('Tegel 8', 'Panelgatan 19', '1005', '2024-01-01', true),
+       ('Egino14', 'Lundavägen 10', '0002', NULL, false),
+       ('Egino14', 'Lundavägen 10', '0003', '2022-10-01', true);
 
 INSERT INTO errorReports(error_ID, personnumber, tenant_name, property_address, apartment_number, information)
 VALUES ('12345', '9906075512', 'Stina Hansson', 'Panelgatan 19','1005', 'Kass ventil'),
