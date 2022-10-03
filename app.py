@@ -131,18 +131,19 @@ def get_vacancy(property_name):
     return {"data": found}
 
 # # terminate contract of an apartment and give date for end of contract
-# curl -X POST http://localhost:8888/apartments/Panelgatan5/1001/terminate
-@post('/apartments/<property_address>/<apartment_number>/terminate')
-def terminate_contract(property_address, apartment_number):
+# curl -X POST http://localhost:8888/apartments/2023-05-11/Panelgatan5/1001/terminate
+
+@post('/apartments/<end_of_contract_date>/<property_address>/<apartment_number>/terminate')
+def terminate_contract(end_of_contract_date, property_address, apartment_number):
     c = db.cursor()
     c.execute( """
         UPDATE apartments
         SET is_terminated = 1,
-            end_of_contract_date = "2023-03-01"
+            end_of_contract_date = ?
         WHERE property_address = ?
         AND apartment_number = ?
         """,
-        [unquote(property_address), unquote(apartment_number)]
+        [unquote(end_of_contract_date),unquote(property_address), unquote(apartment_number)]
     )
 
     db.commit()
